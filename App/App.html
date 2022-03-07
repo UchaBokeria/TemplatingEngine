@@ -1,0 +1,25 @@
+<div>
+    <h2>{title}</h2>
+</div>
+
+<div>
+    <h1 TDclick="changeName">{name}</h1>
+</div>
+
+<div Foreach="item of list">
+    <p> {item} </p>
+</div>
+
+<div Foreach="item of listObject">
+    <p> id: {item.id} </p>
+    <p> name: {item.name} </p>
+    <p> number: {item.number} </p>
+</div>
+
+<div>
+    <p RouteTo="Home">Home</p>
+</div>
+
+<router></router>
+
+<output></output>
