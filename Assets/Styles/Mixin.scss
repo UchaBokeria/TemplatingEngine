@@ -1,0 +1,14 @@
+/* This file is for Mixin-declaration */
+
+@mixin Flex($justify: center, $direction: row) {
+    display: flex;
+    align-items: center;
+    justify-content: $justify;
+    flex-direction: $direction;
+}
+
+@mixin BoxShadow() {
+    box-shadow: 6px 3px 13px -3px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 6px 3px 13px -3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 6px 3px 13px -3px rgba(0,0,0,0.75);
+}

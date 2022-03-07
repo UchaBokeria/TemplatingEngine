@@ -1,4 +1,3 @@
-.tmp
-.jpg
-.png
-.gif
+/dist
+/node_modules
+.vscode

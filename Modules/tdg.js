@@ -1,20 +1,20 @@
-import {Router} from "../App/Routing.Map.js";
+import {Router} from "../App/Routes.js";
 
 export const TDG = async (router, dest, customModule = undefined) => {
     $.ajax({
-        url: `./App/${router}.html`,
-        data: {},
+        url: `./App/${(router == "App" ? router : `${router}/${router}`)}.html`,
+        cache: false,
         success: async (html) => {
 
             /* Render */
             let render = html; 
-            let module = (customModule == undefined) ? new (await Router.App()).default() : customModule;
+            let module = (customModule == undefined) ? new (await Router[router]()).default() : customModule;
             Object.entries(module).forEach( value => render = render.replace(`{${value[0]}}`, value[1]) );
             dest.innerHTML = render;
 
             /* Events */
-            ["TDclick","TDkeyup"].forEach( customnEvent => {
-                document.querySelectorAll(`[${customnEvent}]`).forEach( (el) => {
+            ["TDclick","TDkeyup","TDdblclick"].forEach( customnEvent => {
+                dest.querySelectorAll(`[${customnEvent}]`).forEach( (el) => {
                     let method = el.getAttribute(customnEvent);
                     el.addEventListener(customnEvent.replace("TD", ""), function (e)  {
                         /* Re-render */
@@ -25,7 +25,7 @@ export const TDG = async (router, dest, customModule = undefined) => {
             });
 
             /* Loops */
-            document.querySelectorAll("[Foreach]").forEach( (el) => {
+            dest.querySelectorAll("[Foreach]").forEach( (el) => {
                 let loopPhrase = el.getAttribute("Foreach");
                 let loopSplice = loopPhrase.split(" ");
 
@@ -80,16 +80,27 @@ export const TDG = async (router, dest, customModule = undefined) => {
             });
 
             /* Logics */
-            document.querySelectorAll("[IF]").forEach( (el) => {
-                if(!module[el.getAttribute("IF")]) el.style.display = "none";
-            });
+            dest.querySelectorAll("[IF]").forEach( (el) => el.style.display = (!module[el.getAttribute("IF")]) ? "none" : "block" );
+            
+            dest.querySelectorAll("[IFclass]").forEach( (el) =>  
+                (!el.getAttribute("IFclass").split(":")[0]) ? 
+                el.style.classList.remove(el.getAttribute("IFclass").split(":")[1]) : 
+                el.style.classList.add(el.getAttribute("IFclass").split(":")[1]) );
+            
+            dest.querySelectorAll("[IFclass]").forEach( (el) =>  
+                (!el.getAttribute("IFclass").split(":")[0]) ? 
+                el.style.classList.remove(el.getAttribute("IFclass").split(":")[1]) : 
+                el.style.classList.add(el.getAttribute("IFclass").split(":")[1]) );
 
             /* Closed Routes */
-            document.querySelectorAll("[RouteTo]").forEach( (el) => {
+            dest.querySelectorAll("[RouteTo]").forEach( (el) => {
                 el.addEventListener("click", function (e) {
-                    TDG(`${el.getAttribute("RouteTo")}/${el.getAttribute("RouteTo")}`, document.querySelector("output"));
+                    TDG(el.getAttribute("RouteTo"), dest.querySelector("output"));
                 });
             });
+
+            /* Open Routes */
+            dest.querySelectorAll("[RouteOn]").forEach( (el) => TDG(el.getAttribute("RouteTo"), dest.querySelector("output")) );
 
             return render;
 
