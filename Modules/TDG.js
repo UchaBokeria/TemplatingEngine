@@ -90,12 +90,4 @@ export const TDG = async (router, dest, customModule = undefined) => {
             dest.querySelectorAll("[RouteTo]").forEach( (el) => {
                 el.addEventListener("click", function (e) {
                     TDG(el.getAttribute("RouteTo"), dest.querySelector("output"));
-                });
-            });
-
-            return render;
-
-        }
-    });
-
-}
+              
